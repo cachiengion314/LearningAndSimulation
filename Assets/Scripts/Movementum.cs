@@ -17,21 +17,21 @@ public class Movementum : MonoBehaviour
   void FixedUpdate()
   {
     if (!enableAutoUpdate) return;
-    if (_lastFrameVelocity.Equals(0))
-      _lastFramePosition = transform.position;
+    if (_lastFrameVelocity.Equals(0)) _lastFramePosition = transform.position;
+
     transform.position = UpdatePosition();
     _lastFramePosition = transform.position;
   }
 
-  float3 CalculateAccelerateBy()
+  float3 CalculateAccelerate()
   {
     var accelerate = ConstantForce / mass;
     return accelerate + gravity;
   }
 
-  float3 CalculateVelocityBy()
+  float3 CalculateVelocity()
   {
-    var accelerate = CalculateAccelerateBy();
+    var accelerate = CalculateAccelerate();
     var v = _lastFrameVelocity + accelerate * Time.fixedDeltaTime;
     return v;
   }
@@ -47,7 +47,7 @@ public class Movementum : MonoBehaviour
   /// </summary>
   public float3 UpdatePosition()
   {
-    var currentVelocity = CalculateVelocityBy();
+    var currentVelocity = CalculateVelocity();
     var position = CalculatePositionBy(currentVelocity);
     _lastFrameVelocity = currentVelocity;
     return position;
@@ -66,5 +66,26 @@ public class Movementum : MonoBehaviour
   public void SetAutoUpdate(bool shouldAuto)
   {
     enableAutoUpdate = shouldAuto;
+  }
+
+  void OnTriggerEnter(Collider other)
+  {
+    // Jn = m(v_after - vn_before_free)
+    _lastFrameVelocity = 0;
+  }
+
+  void OnTriggerStay(Collider other)
+  {
+    // creating an upward impulse forces (upward linear momentum Jn)
+    // vn = _lastFrameVelocity dot_with n 
+    // vn will represent the ratio of this projection obj's velocity 
+    // with collided obj's normal vector
+    // v_after(vector) = v_before(vector) - vn(scalar value) * n(vector)
+    var vn = math.dot(_lastFrameVelocity, other.transform.up);
+    var downwardVelocity = vn * (float3)other.transform.up;
+    var v_after = _lastFrameVelocity - downwardVelocity;
+
+    _lastFrameVelocity = v_after;
+    transform.position -= (Vector3)downwardVelocity * Time.fixedDeltaTime;
   }
 }
