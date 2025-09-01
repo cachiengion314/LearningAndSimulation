@@ -5,18 +5,21 @@ public class Movementum : MonoBehaviour
 {
   [Header("Settings")]
   [Tooltip("Enable if you want movement of the obj itself is auto controlled by component's algorithms")]
-  [SerializeField] bool enableAutoUpdate;
-  [SerializeField] bool useGravity;
   [SerializeField] float3 gravity;
   [SerializeField][Range(.01f, 100)] float mass = 1;
   public float Mass { get { return mass; } }
+  public bool AutoUpdate;
+  public bool UseGravity;
   public float3 ConstantForce = 0;
+  [Range(.0f, 1.0f)]
+  public float Bounce;
+
   float3 _lastFrameVelocity = 0;
   float3 _lastFramePosition = 0;
 
   void FixedUpdate()
   {
-    if (!enableAutoUpdate) return;
+    if (!AutoUpdate) return;
     if (_lastFrameVelocity.Equals(0)) _lastFramePosition = transform.position;
 
     transform.position = UpdatePosition();
@@ -26,7 +29,8 @@ public class Movementum : MonoBehaviour
   float3 CalculateAccelerate()
   {
     var accelerate = ConstantForce / mass;
-    return accelerate + gravity;
+    if (UseGravity) return accelerate + gravity;
+    return accelerate;
   }
 
   float3 CalculateVelocity()
@@ -63,29 +67,24 @@ public class Movementum : MonoBehaviour
     _lastFrameVelocity = velocity;
   }
 
-  public void SetAutoUpdate(bool shouldAuto)
-  {
-    enableAutoUpdate = shouldAuto;
-  }
-
   void OnTriggerEnter(Collider other)
   {
-    // Jn = m(v_after - vn_before_free)
-    _lastFrameVelocity = 0;
+    var e = Bounce;
+    var v_after
+      = _lastFrameVelocity - (1 + e) *
+      (float3)math.dot(_lastFrameVelocity, other.transform.up) * other.transform.up;
+    _lastFrameVelocity = v_after;
   }
 
   void OnTriggerStay(Collider other)
   {
-    // creating an upward impulse forces (upward linear momentum Jn)
-    // vn = _lastFrameVelocity dot_with n 
-    // vn will represent the ratio of this projection obj's velocity 
-    // with collided obj's normal vector
-    // v_after(vector) = v_before(vector) - vn(scalar value) * n(vector)
     var vn = math.dot(_lastFrameVelocity, other.transform.up);
-    var downwardVelocity = vn * (float3)other.transform.up;
-    var v_after = _lastFrameVelocity - downwardVelocity;
+    if (vn < 0) // only cancel downward velocity
+    {
+      var normalVelocity = vn * (float3)other.transform.up;
+      _lastFrameVelocity -= normalVelocity;
 
-    _lastFrameVelocity = v_after;
-    transform.position -= (Vector3)downwardVelocity * Time.fixedDeltaTime;
+      transform.position -= (Vector3)normalVelocity * Time.fixedDeltaTime;
+    }
   }
 }
