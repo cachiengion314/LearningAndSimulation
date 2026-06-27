@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__coplay-mcp__check_compile_errors",
+      "mcp__coplay-mcp__set_unity_project_root",
+      "mcp__coplay-mcp__get_unity_logs"
+    ]
+  }
+}
