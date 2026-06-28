@@ -33,10 +33,6 @@ public class GAgent : MonoBehaviour
     GAction[] acts = GetComponents<GAction>();
     foreach (GAction a in acts)
       actions.Add(a);
-    /// DEBUG:
-    foreach (var action in actions)
-      foreach (var afterEffect in action.afterEffects)
-        print("afterEffect.key " + afterEffect.key); // isWaiting: 1
   }
 
   bool invoked = false;

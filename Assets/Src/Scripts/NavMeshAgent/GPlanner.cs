@@ -80,6 +80,27 @@ public class GPlanner
   }
 
   /// <summary>
+  /// At the first time, collect world states as a starter points. 
+  /// Now, check world states to see preConditions of every possible GActions 
+  /// can be matched. If none basically nothing happen. 
+  /// If yes at a GAction, then function build a currentState 
+  /// that is the result of accumulating after effect states, 
+  /// so we got an unified after effect states obj. And then create a new node 
+  /// with combined cost (from injected node and current action cost) 
+  /// and parent node is the injected one 
+  /// (so we can trace to the first node in the future like A* pathfinding). 
+  /// The check "if GoalAchieved" is basically a final matched 
+  /// condition (its quite very alike to final condition of A* pathfinding) 
+  /// so we collect this one to leaves array so we can use that array to 
+  /// trace to the first node later on. And if the "if GoalAchieved" fail, 
+  /// we continue recursion more into that new node by called again 
+  /// BuildGraph function. But this time, we remove current action from the 
+  /// usuableActions array so basically, 
+  /// we iterator every single actions then if not matched the final condition, 
+  /// we continue to explore more into a node that excluded that explored action. 
+  /// Every actions have this kind of exploring so its quite literally a 
+  /// heavy computation. 
+  /// 
   /// The preconditions' only job is gatekeeping ("am I allowed to run, 
   /// given what's true right now?"), checked once and then discarded. 
   /// They never get written anywhere. Only effects — the result of 
