@@ -1682,6 +1682,8 @@ GameObject:
   - component: {fileID: 1274903986507470294}
   - component: {fileID: 5979932545818074131}
   - component: {fileID: 389463274044430217}
+  - component: {fileID: 5866271456530864670}
+  - component: {fileID: 1902447073164877829}
   m_Layer: 0
   m_Name: Nurse
   m_TagString: Untagged
@@ -1728,7 +1730,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1774,9 +1776,61 @@ MonoBehaviour:
   preConditions:
   - key: Waiting
     value: 1
+  - key: FreeCubicle
+    value: 1
+  afterEffects:
+  - key: patientPickedUp
+    value: 1
+  agent: {fileID: 0}
+  running: 0
+--- !u!114 &5866271456530864670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4927093800701286005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c546c318ac3e021439b8fe10742d997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoToCubicle
+  actionName: Go To Cubicle
+  cost: 1
+  target: {fileID: 0}
+  targetTag: 
+  duration: 5
+  preConditions:
+  - key: patientPickedUp
+    value: 0
   afterEffects:
   - key: treatPatient
-    value: 1
+    value: 0
+  agent: {fileID: 0}
+  running: 0
+--- !u!114 &1902447073164877829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4927093800701286005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eacbfbf3af44994499ca3914d6ce7b8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Rest
+  actionName: Rest
+  cost: 1
+  target: {fileID: 0}
+  targetTag: Lounge
+  duration: 5
+  preConditions:
+  - key: exhausted
+    value: 0
+  afterEffects:
+  - key: rested
+    value: 0
   agent: {fileID: 0}
   running: 0
 --- !u!1 &5171766709469402397

@@ -9,17 +9,26 @@ public class GWorld : MonoBehaviour
     get { return _instance; }
   }
   WorldStates world;
-  GWorld()
-  {
-    world = new WorldStates();
-    patients = new Queue<GameObject>();
-  }
   Queue<GameObject> patients;
+  Queue<GameObject> cubicles;
 
   void Awake()
   {
     if (_instance == null)
-      _instance = new GWorld();
+    {
+      _instance = this;
+
+      world = new WorldStates();
+      patients = new Queue<GameObject>();
+      cubicles = new Queue<GameObject>();
+
+      var cubes = GameObject.FindGameObjectsWithTag("Cubicle");
+      foreach (var c in cubes)
+        cubicles.Enqueue(c);
+
+      if (cubes.Length > 0)
+        world.ModifyState("FreeCubicle", cubes.Length);
+    }
     else
       Destroy(gameObject);
   }
@@ -33,6 +42,17 @@ public class GWorld : MonoBehaviour
   {
     if (patients.Count == 0) return null;
     return patients.Dequeue();
+  }
+
+  public void AddCubicle(GameObject p)
+  {
+    cubicles.Enqueue(p);
+  }
+
+  public GameObject RemoveCubicle()
+  {
+    if (cubicles.Count == 0) return null;
+    return cubicles.Dequeue();
   }
 
   public WorldStates GetWorld()

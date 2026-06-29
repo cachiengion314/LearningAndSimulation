@@ -5,7 +5,6 @@ public class UpdateWorld : MonoBehaviour
 {
   public Text states;
 
-  // Update is called once per frame
   void LateUpdate()
   {
     var worldstates = GWorld.Instance.GetWorld().GetStates();

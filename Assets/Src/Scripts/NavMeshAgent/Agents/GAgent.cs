@@ -23,6 +23,8 @@ public class GAgent : MonoBehaviour
   /// </summary>
   public List<GAction> actions = new();
   public Dictionary<SubGoal, int> goals = new();
+  public GInventory inventory = new();
+  public WorldStates beliefs = new();
   GPlanner planner;
   Queue<GAction> actionQueue;
   public GAction currentAction;
@@ -47,7 +49,9 @@ public class GAgent : MonoBehaviour
   {
     if (currentAction != null && currentAction.running)
     {
-      if (currentAction.agent.hasPath && currentAction.agent.remainingDistance < 1f)
+      var distanceToTarget = Vector3.Distance(
+        currentAction.target.transform.position, transform.position);
+      if (currentAction.agent.hasPath && distanceToTarget < 2.5f)
       {
         if (!invoked)
         {
@@ -64,7 +68,7 @@ public class GAgent : MonoBehaviour
       var sortedGoals = from entry in goals orderby entry.Value descending select entry;
       foreach (KeyValuePair<SubGoal, int> sg in sortedGoals)
       {
-        actionQueue = planner.plan(actions, sg.Key.sgoals, null);
+        actionQueue = planner.plan(actions, sg.Key.sgoals, beliefs);
         if (actionQueue != null)
         {
           currentGoal = sg.Key;

@@ -20,7 +20,7 @@ namespace NavMeshAgentAI
     void SpawnPatient()
     {
       Instantiate(patientPrefab, transform.position, Quaternion.identity);
-      Invoke("SpawnPatient", Random.Range(2, 10));
+      Invoke("SpawnPatient", Random.Range(10, 20));
     }
   }
 }
