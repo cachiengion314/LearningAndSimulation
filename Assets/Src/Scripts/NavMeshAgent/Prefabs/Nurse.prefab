@@ -1684,6 +1684,8 @@ GameObject:
   - component: {fileID: 389463274044430217}
   - component: {fileID: 5866271456530864670}
   - component: {fileID: 1902447073164877829}
+  - component: {fileID: 3889275443515877497}
+  - component: {fileID: 5160464574092399026}
   m_Layer: 0
   m_Name: Nurse
   m_TagString: Untagged
@@ -1776,7 +1778,7 @@ MonoBehaviour:
   preConditions:
   - key: Waiting
     value: 1
-  - key: FreeCubicle
+  - key: FreeCubicles
     value: 1
   afterEffects:
   - key: patientPickedUp
@@ -1824,7 +1826,7 @@ MonoBehaviour:
   cost: 1
   target: {fileID: 0}
   targetTag: Lounge
-  duration: 5
+  duration: 2.5
   preConditions:
   - key: exhausted
     value: 0
@@ -1833,6 +1835,52 @@ MonoBehaviour:
     value: 0
   agent: {fileID: 0}
   running: 0
+--- !u!114 &3889275443515877497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4927093800701286005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85779cd3fb227c649b8b2c383d7424d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoToToilet
+  actionName: Go To Toilet
+  cost: 1
+  target: {fileID: 0}
+  targetTag: 
+  duration: 2.5
+  preConditions:
+  - key: FreeToilets
+    value: 0
+  - key: bursting
+    value: 0
+  afterEffects:
+  - key: relief
+    value: 0
+  agent: {fileID: 0}
+  running: 0
+--- !u!114 &5160464574092399026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4927093800701286005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a8d3245f3cec941b872b8de7dff084, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GStateMonitor
+  state: bursting
+  stateStrength: 10
+  stateDecayRate: 1
+  resourcePrefab: {fileID: 1625109968861542130, guid: 2f67e1b06640349c7a33a29963d525ff, type: 3}
+  queueName: puddles
+  worldState: FreePuddles
+  action: {fileID: 3889275443515877497}
 --- !u!1 &5171766709469402397
 GameObject:
   m_ObjectHideFlags: 0

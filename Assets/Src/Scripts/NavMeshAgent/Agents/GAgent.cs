@@ -51,7 +51,7 @@ public class GAgent : MonoBehaviour
     {
       var distanceToTarget = Vector3.Distance(
         currentAction.target.transform.position, transform.position);
-      if (currentAction.agent.hasPath && distanceToTarget < 2.5f)
+      if (distanceToTarget < 2.5f)
       {
         if (!invoked)
         {
@@ -65,8 +65,20 @@ public class GAgent : MonoBehaviour
     if (planner == null || actionQueue == null)
     {
       planner = new GPlanner();
+      /// It tries goals highest priority first, takes the first one that's even 
+      /// plannable right now, and once that goal's plan empties out 
+      /// (and remove=true deletes it from goals), the next LateUpdate re-sorts and 
+      /// naturally falls through to the next goal in line. 
+      /// So staging into isWaiting(3) → isTreated(5) → isHome(5) 
+      /// isn't really about forcing an order through priority value — it's that 
+      /// each smaller goal is individually a tiny, fast, low-branching search
+      /// and the sequence of goals (combined with what preconditions are actually 
+      /// achievable at each point) is what enforces the causal order, not the goal list 
+      /// itself. Decomposing into checkpoints turns one expensive deep search into 
+      /// several cheap shallow ones — and gives you natural milestones 
+      /// (PostPerform side effects) to hook gameplay logic onto along the way.
       var sortedGoals = from entry in goals orderby entry.Value descending select entry;
-      foreach (KeyValuePair<SubGoal, int> sg in sortedGoals)
+      foreach (var sg in sortedGoals)
       {
         actionQueue = planner.plan(actions, sg.Key.sgoals, beliefs);
         if (actionQueue != null)

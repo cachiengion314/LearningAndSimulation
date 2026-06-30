@@ -6,21 +6,21 @@ public class GetPatient : GAction
 
   public override bool PrePerform()
   {
-    target = GWorld.Instance.RemovePatient();
+    target = GWorld.Instance.GetQueue("patients").RemoveResource();
     if (target == null)
       return false;
 
-    resource = GWorld.Instance.RemoveCubicle();
+    resource = GWorld.Instance.GetQueue("cubicles").RemoveResource();
     if (resource != null)
       inventory.AddItem(resource);
     else
     {
-      GWorld.Instance.AddPatient(target);
+      GWorld.Instance.GetQueue("patients").AddResource(target);
       target = null;
       return false;
     }
 
-    GWorld.Instance.GetWorld().ModifyState("FreeCubicle", -1);
+    GWorld.Instance.GetWorld().ModifyState("FreeCubicles", -1);
     return true;
   }
 
@@ -28,7 +28,10 @@ public class GetPatient : GAction
   {
     GWorld.Instance.GetWorld().ModifyState("Waiting", -1);
     if (target)
+    {
+      /// Give the patient the cubicle destination
       target.GetComponent<GAgent>().inventory.AddItem(resource);
+    }
     return true;
   }
 }

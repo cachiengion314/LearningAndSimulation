@@ -16,7 +16,13 @@ public class Node
     this.action = action;
   }
 
-  public Node(Node parent, float cost, Dictionary<string, int> allStates, Dictionary<string, int> beliefStates, GAction action)
+  public Node(
+    Node parent,
+    float cost,
+    Dictionary<string, int> allStates,
+    Dictionary<string, int> beliefStates,
+    GAction action
+  )
   {
     this.parent = parent;
     this.cost = cost;
@@ -31,9 +37,10 @@ public class Node
 public class GPlanner
 {
   public Queue<GAction> plan(
-    /// Storing GActions scripts thats are attached to the agent instance itself
+    /// Stored GActions scripts thats are attached to the agent instance itself
     List<GAction> actions,
     Dictionary<string, int> goal,
+    /// beliefStates lets you model facts that are true for one agent but not another
     WorldStates beliefStates
   )
   {
@@ -45,7 +52,12 @@ public class GPlanner
     }
 
     var leaves = new List<Node>();
-    var start = new Node(null, 0, GWorld.Instance.GetWorld().GetStates(), beliefStates.GetStates(), null);
+    var start = new Node(
+      null,
+      0,
+      GWorld.Instance.GetWorld().GetStates(),
+      beliefStates.GetStates(),
+      null);
 
     var success = BuildGraph(start, leaves, usuableActions, goal);
 
