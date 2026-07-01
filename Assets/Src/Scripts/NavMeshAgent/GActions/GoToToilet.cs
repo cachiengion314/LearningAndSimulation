@@ -19,6 +19,8 @@ public class GoToToilet : GAction
     inventory.RemoveItem(target);
     GWorld.Instance.GetWorld().ModifyState("FreeToilets", 1);
     beliefs.RemoveState("bursting");
+    if (TryGetComponent<GStateMonitor>(out var stateMonitor))
+      stateMonitor.ResetStateStrength();
     return true;
   }
 }

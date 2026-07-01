@@ -11,7 +11,7 @@ public class GStateMonitor : MonoBehaviour
   public string worldState;
   public GAction action;
 
-  bool stateFound = false;
+  public bool stateFound;
   float initialStrength;
 
   void Awake()
@@ -20,14 +20,14 @@ public class GStateMonitor : MonoBehaviour
     initialStrength = stateStrength;
   }
 
+  public void ResetStateStrength()
+  {
+    stateFound = false;
+    stateStrength = initialStrength;
+  }
+
   void LateUpdate()
   {
-    if (action.running)
-    {
-      stateFound = false;
-      stateStrength = initialStrength;
-    }
-
     if (!stateFound && beliefs.HasState(state))
       stateFound = true;
 

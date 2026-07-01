@@ -1,4 +1,3 @@
-using UnityEngine;
 using System.Collections.Generic;
 
 public class Node
@@ -63,7 +62,7 @@ public class GPlanner
 
     if (!success)
     {
-      // Debug.Log("No Plan");
+      /// No plan
       return null;
     }
     Node cheapest = null;
@@ -81,23 +80,13 @@ public class GPlanner
     while (n != null)
     {
       if (n.action != null)
-      {
         result.Insert(0, n.action);
-      }
       n = n.parent;
     }
 
     var queue = new Queue<GAction>();
     foreach (GAction a in result)
-    {
       queue.Enqueue(a);
-    }
-
-    Debug.Log("The Plan is: ");
-    foreach (GAction a in queue)
-    {
-      Debug.Log("Q: " + a.actionName);
-    }
 
     return queue;
   }

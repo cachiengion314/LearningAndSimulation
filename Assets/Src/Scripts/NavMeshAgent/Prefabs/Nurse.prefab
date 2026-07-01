@@ -1851,7 +1851,7 @@ MonoBehaviour:
   cost: 1
   target: {fileID: 0}
   targetTag: 
-  duration: 2.5
+  duration: 1
   preConditions:
   - key: FreeToilets
     value: 0
@@ -1875,12 +1875,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GStateMonitor
   state: bursting
-  stateStrength: 10
+  stateStrength: 15
   stateDecayRate: 1
   resourcePrefab: {fileID: 1625109968861542130, guid: 2f67e1b06640349c7a33a29963d525ff, type: 3}
   queueName: puddles
   worldState: FreePuddles
   action: {fileID: 3889275443515877497}
+  stateFound: 0
 --- !u!1 &5171766709469402397
 GameObject:
   m_ObjectHideFlags: 0
