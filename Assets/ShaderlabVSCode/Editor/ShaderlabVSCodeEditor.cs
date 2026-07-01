@@ -64,10 +64,10 @@ namespace ShaderlabVSCode
         [OnOpenAssetAttribute(0)]
         public static bool OpenInVSCode(int instanceID, int line)
         {
-            string path = AssetDatabase.GetAssetPath(EditorUtility.InstanceIDToObject(instanceID));
+            string path = AssetDatabase.GetAssetPath(EditorUtility.EntityIdToObject(instanceID));
             path = Path.Combine(Path.Combine(Application.dataPath, ".."), path);
             path = Path.GetFullPath(path);
-            
+
             if (SHADER_FILE_EXTENSIONS.Any(extension => path.Trim().ToLower().EndsWith(extension)))
             {
                 if (VSCodeBridge.IsVSCodeExists())
@@ -260,7 +260,7 @@ namespace ShaderlabVSCode
 #if UNITY_EDITOR_WIN
             var batchFile = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Library", "cp.bat"));
             File.WriteAllText(batchFile, sb.ToString(), Encoding.ASCII);
-            
+
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = batchFile;
             startInfo.Verb = "runas";
